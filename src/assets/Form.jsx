@@ -7,28 +7,31 @@ export default function Form(){
     const [name,setName] = useState("");
     const [disp,setDisp] = useState("");
     const [price,setPrice] = useState("");
+    const [quantity,setQuantity] = useState('');
+    const [img, setImg] = useState();
+
     const [arr,pushArr] = useState([]);
     const [functionChange,changeIt] = useState(-1);
     let functionToCall = (functionChange === -1)?addProduct:updateProduct(functionChange);
 
     function addProduct(){
         console.log(name,disp,price);
-        pushArr([ ...arr,{name,disp,price}]);
+        pushArr([ ...arr,{name,disp,price,quantity,img}]);
         setName("");
         setPrice("");
         setDisp("");
     }
 
-    function addName(event){
-        setName(event.target.value);
+    function addName(ev){
+        setName(ev.target.value);
     }
 
-    function addDisp(event){
-        setDisp(event.target.value);
+    function addDisp(ev){
+        setDisp(ev.target.value);
     }
 
-    function addPrice(event){
-        setPrice(event.target.value);
+    function addPrice(ev){
+        setPrice(ev.target.value);
     }
 
     function renameThis(index){
@@ -38,6 +41,17 @@ export default function Form(){
             setPrice(arr[index].price);
             changeIt(index);
         }
+    }
+
+    function addQuantity(ev){
+        setQuantity(ev.target.value);
+    }
+
+    function addImg(ev){
+        console.log(ev.target.files);
+        let url = (URL.createObjectURL(ev.target.files[0]));
+        // console.log(ev.target.value);
+        setImg( url );
     }
 
     function updateProduct(index){
@@ -71,12 +85,15 @@ export default function Form(){
         }
     }
 
+
     return(
         <>
             <div className="form">
-                <input onChange={addName} value = {name} type="text" name="" id="pName" title = "name" />
-                <input onChange={addDisp} value = {disp} type="text" name="" id="pDisp" title = "discription" />
-                <input onChange={addPrice} value = {price} type="number" name="" id="pPrice" title = "price" />
+                <input placeholder = "Product Name" onChange={addName} value = {name} type="text" name="" id="pName" title = "name" />
+                <input placeholder = "Product Discription" onChange={addDisp} value = {disp} type="text" name="" id="pDisp" title = "discription" />
+                <input placeholder = "Price" onChange={addPrice} value = {price} type="number" name="" id="pPrice" title = "price" />
+                <input placeholder = "Quantity" onChange={addQuantity} value={quantity} type="number" />
+                <input type="file" name="" id="" onChange={addImg} />  
                 <button onClick={functionToCall}>Btn</button>
             </div>
             <div className="product-container">
@@ -87,7 +104,10 @@ export default function Form(){
                             <p key={index+"name"}>{element.name}</p>
                             <p key={index+"disp"}>{element.disp}</p>
                             <p key={index+"price"}>{element.price}</p>
-                            <button onClick={renameThis(index)}>Rename</button>
+                            <p key={index+"quantity"}>{element.quantity}</p>
+                            {console.log(element.img)}
+                            <p key={index+'img'}><img src={element.img}/></p>
+                            <button onClick={renameThis(index)}>Update</button>
                             <button onClick={deleteElement(index)}>Delete</button>
                         </div>
                         )
